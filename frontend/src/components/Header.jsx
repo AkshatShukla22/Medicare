@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import backendUrl from '../utils/BackendURL'; // Import your backend URL
+import backendUrl, { getAssetUrl } from '../utils/BackendURL'; // Import your backend URL
 import '../styles/Header.css';
 
 const Header = () => {
@@ -19,24 +19,6 @@ const Header = () => {
 
   // Debounce timer for search
   const searchTimeoutRef = useRef(null);
-
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -323,7 +305,7 @@ const Header = () => {
                           {/* FIXED: Use getImageUrl helper for proper URL handling */}
                           {suggestion.type === 'doctor' && suggestion.profileImage ? (
                             <img 
-                              src={getImageUrl(suggestion.profileImage)} 
+                              src={getAssetUrl(suggestion.profileImage)} 
                               alt={suggestion.label}
                               className="suggestion-profile-image"
                               onError={(e) => {
@@ -436,7 +418,7 @@ const Header = () => {
                 {/* FIXED: Also apply proper image URL handling for user profile in header */}
                 {user?.profileImage ? (
                   <img 
-                    src={getImageUrl(user.profileImage)} 
+                    src={getAssetUrl(user.profileImage)} 
                     alt={user.name}
                     className="profile-avatar-image"
                     onError={(e) => {

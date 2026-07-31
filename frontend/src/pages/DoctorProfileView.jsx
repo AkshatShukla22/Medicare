@@ -1,7 +1,7 @@
 // DoctorProfileView.jsx - Updated with Cloudinary support and messaging functionality
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import backendUrl from '../utils/BackendURL';
+import backendUrl, { getAssetUrl } from '../utils/BackendURL';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/Rating.css';
 
@@ -23,24 +23,6 @@ const DoctorProfileView = () => {
   const [showDoctorPopup, setShowDoctorPopup] = useState(false);
   const [originalUserRating, setOriginalUserRating] = useState(0);
   const [originalUserFeedback, setOriginalUserFeedback] = useState('');
-
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   useEffect(() => {
     if (doctorId) {
@@ -326,7 +308,7 @@ const DoctorProfileView = () => {
           <div className="profile-cover-image">
             {doctor.backgroundImage ? (
               <img 
-                src={getImageUrl(doctor.backgroundImage)} 
+                src={getAssetUrl(doctor.backgroundImage)} 
                 alt="Background" 
                 className="profile-background-img"
                 onError={(e) => {
@@ -345,7 +327,7 @@ const DoctorProfileView = () => {
           <div className="profile-page-avatar">
             <div className="profile-avatar-container">
               {doctor.profileImage ? (
-                <img src={getImageUrl(doctor.profileImage)} alt={doctor.name || 'Doctor'} />
+                <img src={getAssetUrl(doctor.profileImage)} alt={doctor.name || 'Doctor'} />
               ) : (
                 <div className="profile-avatar-placeholder">
                   <i className="fas fa-user-md"></i>
@@ -695,11 +677,11 @@ const DoctorProfileView = () => {
                               <div className="rating-review-avatar">
                                 {review.profileImage ? (
                                   <img 
-                                    src={getImageUrl(review.profileImage)} 
+                                    src={getAssetUrl(review.profileImage)} 
                                     alt={review.userName || 'User'} 
                                     className="rating-review-avatar-img"
                                     onError={(e) => {
-                                      console.log('Profile image failed to load:', getImageUrl(review.profileImage));
+                                      console.log('Profile image failed to load:', getAssetUrl(review.profileImage));
                                       // Hide the image and show the fallback icon
                                       e.target.style.display = 'none';
                                       const fallbackIcon = e.target.parentNode.querySelector('.rating-avatar-fallback');

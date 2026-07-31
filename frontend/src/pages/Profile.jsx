@@ -1,7 +1,7 @@
 // Profile.jsx - Fixed for Cloudinary integration
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import backendUrl from '../utils/BackendURL';
+import backendUrl, { getAssetUrl } from '../utils/BackendURL';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/Profile.css';
 
@@ -22,24 +22,6 @@ const Profile = () => {
   const profileImageRef = useRef(null);
   const backgroundImageRef = useRef(null);
   const navigate = useNavigate();
-
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   useEffect(() => {
     fetchUserProfile();
@@ -455,7 +437,7 @@ const Profile = () => {
                   />
                 ) : user.backgroundImage ? (
                   <img 
-                    src={getImageUrl(user.backgroundImage)} 
+                    src={getAssetUrl(user.backgroundImage)} 
                     alt="Background" 
                     className="profile-background-img"
                     onError={(e) => {
@@ -495,7 +477,7 @@ const Profile = () => {
               {imagePreview.profile ? (
                 <img src={imagePreview.profile} alt="Profile Preview" />
               ) : user.profileImage ? (
-                <img src={getImageUrl(user.profileImage)} alt={user.name || 'User'} />
+                <img src={getAssetUrl(user.profileImage)} alt={user.name || 'User'} />
               ) : (
                 <div className="profile-avatar-placeholder">
                   <i className={`fas ${user.userType === 'doctor' ? 'fa-user-md' : 'fa-user'}`}></i>
@@ -632,7 +614,7 @@ const Profile = () => {
                                 {imagePreview.profile ? (
                                   <img src={imagePreview.profile} alt="Profile Preview" />
                                 ) : user.profileImage ? (
-                                  <img src={getImageUrl(user.profileImage)} alt="Current Profile" />
+                                  <img src={getAssetUrl(user.profileImage)} alt="Current Profile" />
                                 ) : (
                                   <div className="image-preview-placeholder">
                                     <i className="fas fa-user"></i>
@@ -659,7 +641,7 @@ const Profile = () => {
                                 {imagePreview.background ? (
                                   <img src={imagePreview.background} alt="Background Preview" />
                                 ) : user.backgroundImage ? (
-                                  <img src={getImageUrl(user.backgroundImage)} alt="Current Background" />
+                                  <img src={getAssetUrl(user.backgroundImage)} alt="Current Background" />
                                 ) : (
                                   <div className="image-preview-placeholder">
                                     <i className="fas fa-image"></i>
@@ -1187,7 +1169,7 @@ const Profile = () => {
                           {imagePreview.profile ? (
                             <img src={imagePreview.profile} alt="Profile Preview" />
                           ) : user.profileImage ? (
-                            <img src={getImageUrl(user.profileImage)} alt="Current Profile" />
+                            <img src={getAssetUrl(user.profileImage)} alt="Current Profile" />
                           ) : (
                             <div className="image-preview-placeholder">
                               <i className="fas fa-user"></i>

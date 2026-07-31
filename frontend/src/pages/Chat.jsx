@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSocket } from '../contexts/SocketContext';
-import backendUrl from '../utils/BackendURL';
+import backendUrl, { getAssetUrl } from '../utils/BackendURL';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/Chat.css';
 
@@ -23,24 +23,6 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const typingTimeoutRef = useRef(null);
-
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   useEffect(() => {
     fetchCurrentUser();
@@ -354,7 +336,7 @@ const Chat = () => {
           <div className="chat-user-avatar">
             {otherUser?.profileImage ? (
               <img 
-                src={getImageUrl(otherUser.profileImage)} 
+                src={getAssetUrl(otherUser.profileImage)} 
                 alt={otherUser.name}
                 onError={(e) => {
                   // Fallback to placeholder if image fails to load
@@ -414,7 +396,7 @@ const Chat = () => {
                   <>
                     {currentUser.profileImage ? (
                       <img 
-                        src={getImageUrl(currentUser.profileImage)} 
+                        src={getAssetUrl(currentUser.profileImage)} 
                         alt={currentUser.name}
                         onError={(e) => {
                           e.target.style.display = 'none';
@@ -434,7 +416,7 @@ const Chat = () => {
                   <>
                     {otherUser?.profileImage ? (
                       <img 
-                        src={getImageUrl(otherUser.profileImage)} 
+                        src={getAssetUrl(otherUser.profileImage)} 
                         alt={otherUser.name}
                         onError={(e) => {
                           e.target.style.display = 'none';
@@ -472,7 +454,7 @@ const Chat = () => {
             <div className="typing-avatar">
               {otherUser?.profileImage ? (
                 <img 
-                  src={getImageUrl(otherUser.profileImage)} 
+                  src={getAssetUrl(otherUser.profileImage)} 
                   alt={otherUser.name}
                   onError={(e) => {
                     e.target.style.display = 'none';

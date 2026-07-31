@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSocket } from '../contexts/SocketContext';
-import backendUrl from '../utils/BackendURL';
+import backendUrl, { getAssetUrl } from '../utils/BackendURL';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/Messages.css';
 
@@ -17,24 +17,6 @@ const Messages = () => {
   const [searching, setSearching] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
-
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   useEffect(() => {
     fetchCurrentUser();
@@ -325,7 +307,7 @@ const Messages = () => {
                     <div className="search-result-avatar">
                       {user.profileImage ? (
                         <img 
-                          src={getImageUrl(user.profileImage)} 
+                          src={getAssetUrl(user.profileImage)} 
                           alt={user.name} 
                           onError={(e) => {
                             e.target.style.display = 'none';
@@ -381,7 +363,7 @@ const Messages = () => {
                 <div className="conversation-avatar">
                   {conversation.profileImage ? (
                     <img 
-                      src={getImageUrl(conversation.profileImage)} 
+                      src={getAssetUrl(conversation.profileImage)} 
                       alt={conversation.name} 
                       onError={(e) => {
                         e.target.style.display = 'none';

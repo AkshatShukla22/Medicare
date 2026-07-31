@@ -1,26 +1,9 @@
 import React, { useState } from 'react';
-import backendUrl from '../utils/BackendURL';
+import { getAssetUrl } from '../utils/BackendURL';
 import '../styles/DoctorCard.css';
 
 const DoctorCard = ({ doctor, onClick }) => {
   const [imageError, setImageError] = useState(false);
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   // Check if doctor has profile image
   const hasProfileImage = doctor.profileImage && doctor.profileImage.trim() !== '' && !imageError;
@@ -106,7 +89,7 @@ const DoctorCard = ({ doctor, onClick }) => {
         <div className="doctor-image">
         {hasProfileImage ? (
           <img 
-            src={getImageUrl(doctor.profileImage)}
+            src={getAssetUrl(doctor.profileImage)}
             alt={doctor.name}
             onError={() => setImageError(true)}
           />

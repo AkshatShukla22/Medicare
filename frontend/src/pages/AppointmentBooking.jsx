@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import backendUrl from '../utils/BackendURL';
+import backendUrl, { getAssetUrl } from '../utils/BackendURL';
 import LoadingSpinner from '../components/LoadingSpinner';
 import '../styles/AppointmentBooking.css';
 
@@ -22,24 +22,6 @@ const AppointmentBooking = () => {
   const [bookingLoading, setBookingLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
-  // Helper function to check if URL is a Cloudinary URL
-  const isCloudinaryUrl = (url) => {
-    return url && (url.startsWith('https://res.cloudinary.com') || url.startsWith('http://res.cloudinary.com'));
-  };
-
-  // Helper function to get correct image URL
-  const getImageUrl = (imageUrl) => {
-    if (!imageUrl) return null;
-    
-    // If it's a Cloudinary URL, return as-is
-    if (isCloudinaryUrl(imageUrl)) {
-      return imageUrl;
-    }
-    
-    // If it's a relative path (legacy), prepend backend URL
-    return `${backendUrl}${imageUrl}`;
-  };
 
   // Get minimum date (today)
   const getMinDate = () => {
@@ -371,7 +353,7 @@ const AppointmentBooking = () => {
           <div className="doctor-avatar">
             {doctor.profileImage ? (
               <img 
-                src={getImageUrl(doctor.profileImage)} 
+                src={getAssetUrl(doctor.profileImage)} 
                 alt={doctor.name}
                 className="doctor-avatar-img"
               />
